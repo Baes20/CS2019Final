@@ -29,15 +29,18 @@ public class Battlefield {
 		battlefield[row][col] = piece;
 	}
 	
-	public boolean calcNextState() {
+	public void calcNextState() {
 		for(int i = 0; i < height; i++) {
 			for(int j = 0; j < width; j++) {
 				calcPlantMove(i, j);
 				calcZombieMove(i, j);
+			}
+		}
+		for(int i = 0; i < height; i++) {
+			for(int j = 0; j < width; j++) {
 				removeDead(i, j);
 			}
 		}
-		return isGameOver();
 	}
 	
 	public void calcPlantMove(int i, int j) {
@@ -53,11 +56,10 @@ public class Battlefield {
 	}
 	
 	public void calcZombieMove(int i, int j) {
-		if(battlefield[i][j] instanceof Zombie && j-1 < 0) { // if it's a zombie and hasn't reached to 0
+		if(battlefield[i][j] instanceof Zombie && j-1 >= 0) { // if it's a zombie and hasn't reached to 0
 			if(battlefield[i][j-1] instanceof NullNode) { // if the next is empty
-				BNode temp = battlefield[i][j-1];
 				battlefield[i][j-1] = battlefield[i][j];
-				battlefield[i][j] = temp; // move
+				battlefield[i][j] = new NullNode(); // move
 			}else if(battlefield[i][j-1] instanceof Plant) { // if the next is plant
 				((Plant)battlefield[i][j-1]).setHealth(battlefield[i][j-1].getHealth() - battlefield[i][j-1].getPower()); //deal some damage
 			}
@@ -74,7 +76,11 @@ public class Battlefield {
 		
 	}
 	
-	private boolean isGameOver() {
+	public int getPlayerHealth() {
+		return playerhealth;
+	}
+	
+	public boolean isGameOver() {
 		if(playerhealth <= 0) {
 			return true;
 		}else {
