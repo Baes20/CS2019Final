@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 public class Battlefield {
 	
-	private int height;
-	private int width;
+	public int height;
+	public int width;
 	private BNode[][] battlefield;
-	private int playerhealth;
+	private double playerhealth;
 	
 	// creates an empty battlefield 
 	public Battlefield(int h, int w) {
@@ -20,6 +20,10 @@ public class Battlefield {
 				battlefield[i][j] = new NullNode();
 			}
 		}
+	}
+	
+	public BNode[][] getB(){
+		return battlefield;
 	}
 	
 	public void putPieces(BNode piece, int row, int col) {
@@ -45,27 +49,25 @@ public class Battlefield {
 	
 	public void calcPlantMove(int i, int j) {
 		if(battlefield[i][j] instanceof Plant) {
-			for(int k = j+1; k < height; k++) {
-				if(battlefield[i][k] instanceof Zombie) {
-					double zHealth = battlefield[i][k].getHealth();
-					double pPower = battlefield[i][j].getPower();
-					((Zombie)battlefield[i][k]).setHealth(zHealth-pPower); // this basically deals damage to all zombies in a row
-				}
-			}
+			Lambda rule = ((Plant)battlefield[i][j]).getRule();
+			rule.rule(this, i, j);
 		}
+		
+//		if(battlefield[i][j] instanceof Plant) {
+//			for(int k = j+1; k < height; k++) {
+//				if(battlefield[i][k] instanceof Zombie) {
+//					double zHealth = battlefield[i][k].getHealth();
+//					double pPower = battlefield[i][j].getPower();
+//					((Zombie)battlefield[i][k]).setHealth(zHealth-pPower); // this basically deals damage to all zombies in a row
+//				}
+//			}
+//		}
 	}
 	
 	public void calcZombieMove(int i, int j) {
-		if(battlefield[i][j] instanceof Zombie && j-1 >= 0) { // if it's a zombie and hasn't reached to 0
-			if(battlefield[i][j-1] instanceof NullNode) { // if the next is empty
-				battlefield[i][j-1] = battlefield[i][j];
-				battlefield[i][j] = new NullNode(); // move
-			}else if(battlefield[i][j-1] instanceof Plant) { // if the next is plant
-				((Plant)battlefield[i][j-1]).setHealth(battlefield[i][j-1].getHealth() - battlefield[i][j-1].getPower()); //deal some damage
-			}
-		}else if(battlefield[i][j] instanceof Zombie && j == 0) { // if it reached the end
-			playerhealth -= battlefield[i][j].getHealth(); // deal some damage equivalent of its health to the playerhealth
-			battlefield[i][j] = new NullNode(); // and die
+		if(battlefield[i][j] instanceof Zombie) {
+			Lambda rule = ((Zombie)battlefield[i][j]).getRule();
+			rule.rule(this, i, j);
 		}
 	}
 	
@@ -76,8 +78,12 @@ public class Battlefield {
 		
 	}
 	
-	public int getPlayerHealth() {
+	public double getPlayerHealth() {
 		return playerhealth;
+	}
+	
+	public void setPlayerHealth(double amt) {
+		playerhealth = amt;
 	}
 	
 	public boolean isGameOver() {

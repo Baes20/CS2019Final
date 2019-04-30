@@ -1,6 +1,6 @@
 package CS2019Final;
 
-public class Zombie extends BNode{
+public abstract class Zombie extends BNode{
 	double health;
 	double power;
 	
@@ -28,4 +28,6 @@ public class Zombie extends BNode{
 	public void setPower(double p) {
 		power = p;
 	}
+	
+	public abstract Lambda getRule();
 }

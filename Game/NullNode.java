@@ -22,4 +22,8 @@ public class NullNode extends BNode {
 	public void setPower(double p) {
 		// also does nothing
 	}
+	
+	public String toString() {
+		return "N";
+	}
 }
