@@ -10,13 +10,13 @@ public class Battlefield {
 	private double playerhealth;
 	
 	// creates an empty battlefield 
-	public Battlefield(int h, int w) {
-		height = h;
+	public Battlefield(int w, int h) {
 		width = w;
-		battlefield = new BNode[h][w];
+		height = h;
+		battlefield = new BNode[w][h];
 		playerhealth = 1000;
-		for(int i = 0; i < h; i++) {
-			for(int j = 0; j < w; j++) {
+		for(int i = 0; i < w; i++) {
+			for(int j = 0; j < h; j++) {
 				battlefield[i][j] = new NullNode();
 			}
 		}
@@ -27,21 +27,21 @@ public class Battlefield {
 	}
 	
 	public void putPieces(BNode piece, int row, int col) {
-		if (piece instanceof Plant && col > width/2) {
+		if (piece instanceof Plant && col > height/2) {
 			throw new IllegalArgumentException("plants cannot be placed over the right half of the battlefield");
 		}
 		battlefield[row][col] = piece;
 	}
 	
 	public void calcNextState() {
-		for(int i = 0; i < height; i++) {
-			for(int j = 0; j < width; j++) {
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
 				calcPlantMove(i, j);
 				calcZombieMove(i, j);
 			}
 		}
-		for(int i = 0; i < height; i++) {
-			for(int j = 0; j < width; j++) {
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
 				removeDead(i, j);
 			}
 		}
