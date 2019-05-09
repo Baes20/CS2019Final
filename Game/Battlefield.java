@@ -27,10 +27,10 @@ public class Battlefield {
 	}
 	
 	public void putPieces(BNode piece, int row, int col) {
-		if (piece instanceof Plant && col > height/2) {
+		if (piece instanceof Plant && row > height/2) {
 			throw new IllegalArgumentException("plants cannot be placed over the right half of the battlefield");
 		}
-		battlefield[row][col] = piece;
+		battlefield[col][row] = piece;
 	}
 	
 	public void calcNextState() {
